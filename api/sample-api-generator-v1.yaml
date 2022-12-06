@@ -1,0 +1,214 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: '1.0'
+  description: This REST API's used to generate resume from github
+  contact: {}
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  '/api/v1/resume/{userId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+        description: Id of an existing user.
+    get:
+      summary: Get User Info by User ID
+      tags:
+        - Github
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVO'
+              examples:
+                Get User detail:
+                  value:
+                    userName: test
+                    name: test
+                    email: test.abc@gmail.com
+                    avatar_url: 'https://techConative.com'
+                    html_url: 'https://github.com/test'
+                    company: test
+                    blog: 'https://test.blog.com'
+                    location: 'Chennai, TamilNadu, India'
+                    bio: Expreeince Java and j2ee developer
+                    twitter_username: test
+                    public_repos: 0
+        '404':
+          description: User Not Found
+      operationId: get-user-details
+      description: Retrieve the information of the user with the matching user ID.
+  '/api/v1/resume/{userid}/repos':
+    parameters:
+      - schema:
+          type: string
+        name: userid
+        in: path
+        required: true
+        description: id of existing user
+    get:
+      summary: Get repo for user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RepositoryVO'
+              examples:
+                example-1:
+                  value:
+                    - id: string
+                      name: string
+                      html_url: string
+                      description: string
+                      created_at: '2019-08-24T14:15:22Z'
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+            multipart/form-data:
+              schema:
+                $ref: ./sample-api-generator-v1.yaml#/components/schemas/RepositoryVO
+        '404':
+          description: Not Found
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+      operationId: get-repos-for-user
+      description: This method used to return list of repos owned by a user
+      tags:
+        - Github
+  '/api/v1/resume/{userId}/stats':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: Get Aggregated Language
+      tags:
+        - Github
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      operationId: get-user-repo-stats
+      description: This method to aggreaget the language used in user repository
+  /api/v1/product:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - product
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVO'
+      operationId: get-api-v1-product
+    post:
+      summary: ''
+      operationId: post-api-v1-product
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVO'
+components:
+  schemas:
+    UserVO:
+      title: UserVO
+      type: object
+      description: User details
+      properties:
+        userName:
+          type: string
+          description: Unique identifier for the given user.
+        name:
+          type: string
+        email:
+          type: string
+          description: Set to true if the user's email has been verified.
+        avatar_url:
+          type: string
+        html_url:
+          type: string
+        company:
+          type: string
+        blog:
+          type: string
+        location:
+          type: string
+        bio:
+          type: string
+        twitter_username:
+          type: string
+        public_repos:
+          type: integer
+      required:
+        - userName
+        - name
+        - email
+      x-examples:
+        example-1:
+          userName: string
+          name: string
+          email: string
+          avatar_url: string
+          html_url: string
+          company: string
+          blog: string
+          location: string
+          bio: string
+          twitter_username: string
+          public_repos: 0
+    RepositoryVO:
+      title: RepositoryVO
+      x-stoplight:
+        id: ngye9qs5453ys
+      type: object
+      description: Repo details
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        html_url:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    ProductVO:
+      title: ProductVO
+      x-stoplight:
+        id: tcdq8gctdjonq
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+tags:
+  - name: Github
+  - name: product
